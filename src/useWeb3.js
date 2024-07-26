@@ -2,24 +2,22 @@ import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 
 function useWeb3() {
-    const [account, setAccount] = useState(); 
-    const [web3, setWeb3] = useState(); 
-
+    const [account, setAccount] = useState();
+    const [web3, setWeb3] = useState();
+    console.log("test1");
     const getChainId = async () => {
         const chainId = await window.ethereum.request({
-            method : 'eth_chainId',
-            params : [],
+            method: 'eth_chainId',
+            params: [],
         }); // 메타마스크에게 cahinID 요청
-        console.log(chainId);
         return chainId;
     }
 
     const getRequestAccounts = async () => {
         const account = await window.ethereum.request({
-            method : 'eth_requestAccounts',
-            params : [],
+            method: 'eth_requestAccounts',
+            params: [],
         }); // 메타마스크에 연결되어 있는 네트워크 계정 요청
-        console.log(account); 
         return account;
     };
 
@@ -42,15 +40,16 @@ function useWeb3() {
     };
 
     useEffect(() => {
-        async function init (){
+        async function init() {
             try {
                 const targetChainId = ' '
-                const chainId = await getChainId() 
+                const chainId = await getChainId()
                 if (targetChainId !== chainId) {
                     // network를 추가하는 코드 작성
                     addNetwork(targetChainId);
                 }
                 const [account] = await getRequestAccounts();
+                console.log("test2");
 
                 const web3 = new Web3(window.ethereum); // 요청을 메타마스크에 바로 보내줌
                 setAccount(account);
@@ -62,6 +61,12 @@ function useWeb3() {
 
         if (window.ethereum) {
             init()
+            console.log("test3");
+        } else {
+            setTimeout(() => {
+                window.location.href = 'https://metamask.io/download.html';
+            }, 1000);
+
         }
     }, [])
 
